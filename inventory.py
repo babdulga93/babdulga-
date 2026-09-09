@@ -1,12 +1,20 @@
+import json
+
 def main():
     print("Welcome to the Inventory Manager!")
     
     # Our empty dictionary to hold the stock
     inventory = {}
+    # Try to load existing data when the program starts
+    try:
+        with open ("inventory_data.json", "r") as file:
+            inventory = json.load(file)
+    except FileNotFoundError:
+        pass # If the file doesn't exist yet, we just continue with an empty dictionary
+
     
     while True:
         print("\n--- Main Menu ---")
-        print("1. Add a new item")
         print("2. View all items")
         print("3. Exit")
         
@@ -30,6 +38,9 @@ def main():
                 # This line stores the key-value pair in the dictionary
                    inventory[item_name] = item_quantity
                    print(f"Success! {item_quantity} '{item_name}' added to stock.")
+                   # save the updated dictionary to the file
+                   with open("inventory_data.json","w") as file:
+                       json.dump(inventory, file)
             except ValueError:
                     # If they typed letters(like "twenty") instead of a number,it jumps here
                     print("Error: Please enter a valid whole number for quantity")
