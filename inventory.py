@@ -15,11 +15,16 @@ def main():
         if choice == '1':
             item_name = input("Enter the item name: ")
             # We use int() to convert the user's text input into a number
-            item_quantity = int(input("Enter the quantity: ")) 
-            
-            # This line stores the key-value pair in the dictionary
-            inventory[item_name] = item_quantity
-            print(f"Success! {item_quantity} '{item_name}' added to stock.")
+            try:
+                # We TRY to convert the user's input into a number
+                item_quantity = int(input("Enter the quantity: ")) 
+                # If successful, it moves to these lones
+                # This line stores the key-value pair in the dictionary
+                inventory[item_name] = item_quantity
+                print(f"Success! {item_quantity} '{item_name}' added to stock.")
+            except ValueError:
+                    # If they typed letters(like "twenty") instead of a number,it jumps here
+                    print("Error: Please enter a valid whole number for quantity")
             
         elif choice == '2':
             # Check if the dictionary is empty first
