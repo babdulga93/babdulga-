@@ -18,10 +18,18 @@ def main():
             try:
                 # We TRY to convert the user's input into a number
                 item_quantity = int(input("Enter the quantity: ")) 
+                # Check if the item already exist in the dictionary
+                if item_name in inventory:
+                    # Add the new quantity to existing total
+                    inventory[item_name] += item_quantity
+                    print(f"Updated! Added {item_quantity} to '{item_name}'.New total: {inventory[item_name]}")
+                else:
+                    # Creat a brand new entry
+                    
                 # If successful, it moves to these lones
                 # This line stores the key-value pair in the dictionary
-                inventory[item_name] = item_quantity
-                print(f"Success! {item_quantity} '{item_name}' added to stock.")
+                   inventory[item_name] = item_quantity
+                   print(f"Success! {item_quantity} '{item_name}' added to stock.")
             except ValueError:
                     # If they typed letters(like "twenty") instead of a number,it jumps here
                     print("Error: Please enter a valid whole number for quantity")
