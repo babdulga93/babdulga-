@@ -44,8 +44,17 @@ def main():
                 print("Your inventory is currently empty.")
             else:
                 print("\n--- Current Stock ---")
+                # The table header
+                print(f"{'Item Name':<25} | {'Quantity':>8}")
+                # A divider line made by multiplying a hyphen
+                print("-" * 36)
+                
+                # The table rows
                 for item, quantity in inventory.items():
-                    print(f"{item}: {quantity}")
+                    print(f"{item:<25} | {quantity:>8}")
+                    
+                # A bottom divider line
+                print("-" * 36)
                     
         elif choice == '3':
             # NEW: Automatically title-case and trim spaces from the input
