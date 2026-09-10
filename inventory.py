@@ -3,7 +3,6 @@ import json
 # --- FILE HANDLING FUNCTIONS ---
 
 def load_inventory():
-    """Loads data from the JSON file, or returns an empty dictionary if missing."""
     try:
         with open("inventory_data.json", "r") as file:
             return json.load(file)
@@ -11,7 +10,6 @@ def load_inventory():
         return {}
 
 def save_inventory(inventory):
-    """Saves the current inventory dictionary to the JSON file."""
     with open("inventory_data.json", "w") as file:
         json.dump(inventory, file)
 
@@ -29,9 +27,7 @@ def add_item(inventory):
             inventory[item_name] = item_quantity
             print(f"Success! {item_quantity} '{item_name}' added to stock.")
         
-        # Call our reusable save function!
         save_inventory(inventory)
-        
     except ValueError:
         print("Error: Please enter a valid whole number for the quantity.")
 
@@ -65,21 +61,26 @@ def sell_item(inventory):
                 else:
                     print(f"Sale recorded! Remaining '{item_name}': {inventory[item_name]}")
                 
-                # Call our reusable save function!
                 save_inventory(inventory)
-                
         except ValueError:
             print("Error: Please enter a valid whole number.")
     else:
         print(f"Error: '{item_name}' was not found in your inventory.")
+
+# NEW FUNCTION
+def calculate_total(inventory):
+    if len(inventory) == 0:
+        print("Your inventory is currently empty.")
+    else:
+        # sum() adds up all the numbers, inventory.values() gets just the quantities
+        total_items = sum(inventory.values())
+        print(f"\nTotal Stock Volume: You have {total_items} items currently in stock.")
 
 
 # --- MAIN MENU ---
 
 def main():
     print("Welcome to the Inventory Manager!")
-    
-    # Load the data once when the program starts
     inventory = load_inventory()
     
     while True:
@@ -87,11 +88,11 @@ def main():
         print("1. Add or restock an item")
         print("2. View all items")
         print("3. Sell an item")
-        print("4. Exit")
+        print("4. Calculate total stock volume") # NEW MENU ITEM
+        print("5. Exit") # MOVED TO 5
         
-        choice = input("Enter your choice (1-4): ")
+        choice = input("Enter your choice (1-5): ")
         
-        # The menu is now incredibly clean and easy to read
         if choice == '1':
             add_item(inventory)
         elif choice == '2':
@@ -99,10 +100,12 @@ def main():
         elif choice == '3':
             sell_item(inventory)
         elif choice == '4':
+            calculate_total(inventory) # NEW FUNCTION CALL
+        elif choice == '5':
             print("Exiting program. Goodbye!")
             break
         else:
-            print("Invalid choice. Please enter 1, 2, 3, or 4.")
+            print("Invalid choice. Please enter 1, 2, 3, 4, or 5.")
 
 if __name__ == "__main__":
     main()
