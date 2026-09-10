@@ -3,63 +3,79 @@ import json
 def main():
     print("Welcome to the Inventory Manager!")
     
-    # Our empty dictionary to hold the stock
     inventory = {}
-    # Try to load existing data when the program starts
+    
     try:
-        with open ("inventory_data.json", "r") as file:
+        with open("inventory_data.json", "r") as file:
             inventory = json.load(file)
     except FileNotFoundError:
-        pass # If the file doesn't exist yet, we just continue with an empty dictionary
-
-    
+        pass
+        
     while True:
         print("\n--- Main Menu ---")
+        print("1. Add or restock an item")
         print("2. View all items")
-        print("3. Exit")
+        print("3. Sell an item")
+        print("4. Exit")
         
-        choice = input("Enter your choice (1-3): ")
+        choice = input("Enter your choice (1-4): ")
         
         if choice == '1':
-            item_name = input("Enter the item name: ")
-            # We use int() to convert the user's text input into a number
-            try:
-                # We TRY to convert the user's input into a number
-                item_quantity = int(input("Enter the quantity: ")) 
-                # Check if the item already exist in the dictionary
-                if item_name in inventory:
-                    # Add the new quantity to existing total
-                    inventory[item_name] += item_quantity
-                    print(f"Updated! Added {item_quantity} to '{item_name}'.New total: {inventory[item_name]}")
-                else:
-                    # Creat a brand new entry
-                    
-                # If successful, it moves to these lones
-                # This line stores the key-value pair in the dictionary
-                   inventory[item_name] = item_quantity
-                   print(f"Success! {item_quantity} '{item_name}' added to stock.")
-                   # save the updated dictionary to the file
-                   with open("inventory_data.json","w") as file:
-                       json.dump(inventory, file)
-            except ValueError:
-                    # If they typed letters(like "twenty") instead of a number,it jumps here
-                    print("Error: Please enter a valid whole number for quantity")
+            # NEW: Automatically title-case and trim spaces from the input
+            item_name = input("Enter the item name: ").title().strip()
             
+            try:
+                item_quantity = int(input("Enter the quantity: ")) 
+                if item_name in inventory:
+                    inventory[item_name] += item_quantity
+                    print(f"Updated! Added {item_quantity} to '{item_name}'. New total: {inventory[item_name]}")
+                else:
+                    inventory[item_name] = item_quantity
+                    print(f"Success! {item_quantity} '{item_name}' added to stock.")
+                
+                with open("inventory_data.json", "w") as file:
+                    json.dump(inventory, file)
+                    
+            except ValueError:
+                print("Error: Please enter a valid whole number for the quantity.")
+                
         elif choice == '2':
-            # Check if the dictionary is empty first
             if len(inventory) == 0:
                 print("Your inventory is currently empty.")
             else:
                 print("\n--- Current Stock ---")
-                # Loop through the dictionary and print each key and value
                 for item, quantity in inventory.items():
                     print(f"{item}: {quantity}")
                     
         elif choice == '3':
+            # NEW: Automatically title-case and trim spaces from the input
+            item_name = input("Enter the item name you sold: ").title().strip()
+            
+            if item_name in inventory:
+                try:
+                    sell_qty = int(input(f"How many '{item_name}' did you sell? "))
+                    
+                    if sell_qty > inventory[item_name]:
+                        print(f"Error: You only have {inventory[item_name]} in stock!")
+                    elif sell_qty <= 0:
+                        print("Error: Please enter a number greater than 0.")
+                    else:
+                        inventory[item_name] -= sell_qty
+                        print(f"Sale recorded! Remaining '{item_name}': {inventory[item_name]}")
+                        
+                        with open("inventory_data.json", "w") as file:
+                            json.dump(inventory, file)
+                            
+                except ValueError:
+                    print("Error: Please enter a valid whole number.")
+            else:
+                print(f"Error: '{item_name}' was not found in your inventory.")
+                
+        elif choice == '4':
             print("Exiting program. Goodbye!")
             break
         else:
-            print("Invalid choice. Please enter 1, 2, or 3.")
+            print("Invalid choice. Please enter 1, 2, 3, or 4.")
 
 if __name__ == "__main__":
     main()
