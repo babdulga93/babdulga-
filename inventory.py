@@ -69,12 +69,19 @@ def main():
                     elif sell_qty <= 0:
                         print("Error: Please enter a number greater than 0.")
                     else:
+                        # Subtract the quantity
                         inventory[item_name] -= sell_qty
-                        print(f"Sale recorded! Remaining '{item_name}': {inventory[item_name]}")
                         
+                        # NEW: Check if the stock is now zero
+                        if inventory[item_name] == 0:
+                            del inventory[item_name]
+                            print(f"Sale recorded! '{item_name}' is now completely out of stock and removed.")
+                        else:
+                            print(f"Sale recorded! Remaining '{item_name}': {inventory[item_name]}")
+                        
+                        # Save the updated data (happens whether it was deleted or just reduced)
                         with open("inventory_data.json", "w") as file:
                             json.dump(inventory, file)
-                            
                 except ValueError:
                     print("Error: Please enter a valid whole number.")
             else:
